@@ -1,7 +1,30 @@
 import { useEffect, useState } from "react";
 import { getHistory } from "../services/analysisService";
+import { useNavigate } from "react-router-dom";
+
+import {
+    Container,
+    Typography,
+    Card,
+    CardContent,
+    Button,
+    Stack,
+    Chip,
+    Table,
+    TableHead,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Paper
+} from "@mui/material";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function History() {
+
+    const navigate = useNavigate();
 
     const [history, setHistory] = useState([]);
 
@@ -17,9 +40,9 @@ function History() {
 
             setHistory(response.data);
 
-        } catch (e) {
+        } catch (err) {
 
-            console.log(e);
+            console.log(err);
 
         }
 
@@ -27,47 +50,130 @@ function History() {
 
     return (
 
-        <div style={{ width: "900px", margin: "30px auto" }}>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
 
-            <h1>Analysis History</h1>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={3}
+            >
 
-            <table border="1" cellPadding="10">
+                <Typography variant="h4">
 
-                <thead>
+                    Analysis History
 
-                    <tr>
+                </Typography>
 
-                        <th>Resume</th>
+                <Stack direction="row" spacing={2}>
 
-                        <th>Score</th>
+                    <Button
+                        variant="outlined"
+                        startIcon={<ArrowBackIcon />}
+                        onClick={() => navigate("/dashboard")}
+                    >
 
-                        <th>Date</th>
+                        Dashboard
 
-                    </tr>
+                    </Button>
 
-                </thead>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<LogoutIcon />}
+                        onClick={() => {
 
-                <tbody>
+                            localStorage.removeItem("token");
 
-                    {history.map(item => (
+                            navigate("/");
 
-                        <tr key={item.id}>
+                        }}
+                    >
 
-                            <td>{item.resumeName}</td>
+                        Logout
 
-                            <td>{item.matchScore}%</td>
+                    </Button>
 
-                            <td>{item.createdAt}</td>
+                </Stack>
 
-                        </tr>
+            </Stack>
 
-                    ))}
+            <Card>
 
-                </tbody>
+                <CardContent>
 
-            </table>
+                    <TableContainer component={Paper}>
 
-        </div>
+                        <Table>
+
+                            <TableHead>
+
+                                <TableRow>
+
+                                    <TableCell>
+                                        Resume
+                                    </TableCell>
+
+                                    <TableCell>
+                                        ATS Score
+                                    </TableCell>
+
+                                    <TableCell>
+                                        Date
+                                    </TableCell>
+
+                                </TableRow>
+
+                            </TableHead>
+
+                            <TableBody>
+
+                                {history.map((item) => (
+
+                                    <TableRow key={item.id}>
+
+                                        <TableCell>
+
+                                            {item.resumeName}
+
+                                        </TableCell>
+
+                                        <TableCell>
+
+                                            <Chip
+                                                label={`${item.matchScore}%`}
+                                                color={
+                                                    item.matchScore >= 70
+                                                        ? "success"
+                                                        : "warning"
+                                                }
+                                            />
+
+                                        </TableCell>
+
+                                        <TableCell>
+
+                                            {new Date(
+                                                item.createdAt
+                                            ).toLocaleString()}
+
+                                        </TableCell>
+
+                                    </TableRow>
+
+                                ))}
+
+                            </TableBody>
+
+                        </Table>
+
+                    </TableContainer>
+
+                </CardContent>
+
+            </Card>
+
+        </Container>
 
     );
 

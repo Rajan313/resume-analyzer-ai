@@ -375,7 +375,7 @@ GitHub:
 https://github.com/Rajan313
 
 LinkedIn:
-(Add your LinkedIn profile)
+https://www.linkedin.com/in/rajan-chaurasia-759b271b8/
 
 ---
 

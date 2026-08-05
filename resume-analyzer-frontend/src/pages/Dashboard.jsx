@@ -3,7 +3,27 @@ import { uploadResume } from "../services/resumeService";
 import { analyzeResume } from "../services/analysisService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-const [uploadedResume, setUploadedResume] = useState("");
+
+import {
+    Container,
+    Paper,
+    Typography,
+    Button,
+    TextField,
+    Grid,
+    Card,
+    CardContent,
+    Chip,
+    LinearProgress,
+    Stack,
+    Divider
+} from "@mui/material";
+
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import LogoutIcon from "@mui/icons-material/Logout";
+import HistoryIcon from "@mui/icons-material/History";
+
 
 function Dashboard() {
 
@@ -16,7 +36,9 @@ function Dashboard() {
     const [result, setResult] = useState(null);
 
     const [loading, setLoading] = useState(false);
-    
+
+    const [uploadedResume, setUploadedResume] = useState("");
+
     const navigate = useNavigate();
 
     const handleUpload = async () => {
@@ -105,170 +127,290 @@ function Dashboard() {
 
     return (
 
-        <div style={{ width: "900px", margin: "40px auto" }}>
+        <Container maxWidth="lg" sx={{ py: 4 }}>
 
-            <h1>Resume Analyzer</h1>
+            {/* Header */}
 
-            <hr />
-
-            <h3>Upload Resume</h3>
-
-            <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-            />
-
-            <br /><br />
-
-            <button onClick={handleUpload}>
-                Upload Resume
-            </button>
-
-            <br /><br />
-
-            {uploadedResume && (
-                <div
-                    style={{
-                        padding: "10px",
-                        backgroundColor: "#e8f5e9",
-                        border: "1px solid green",
-                        borderRadius: "5px"
-                    }}
-                >
-                    ✅ Uploaded Resume: <strong>{uploadedResume}</strong>
-                </div>
-            )}
-
-            <hr />
-
-            <h3>Job Description</h3>
-
-            <textarea
-                rows="8"
-                cols="90"
-                value={jobDescription}
-                onChange={(e) =>
-                    setJobDescription(e.target.value)
-                }
-            />
-
-            <br /><br />
-
-            <button onClick={handleAnalyze}>
-                Analyze Resume
-            </button>
-
-            <hr />
-
-            <h3>Analysis Result</h3>
-            {result && (
-                <>
-                    <h2 style={{ color: "green" }}>
-                        ATS Score : {result.matchScore}%
-                    </h2>
-
-                    <h3>Strengths</h3>
-                    {result.strengths.map(skill => (
-                        <span
-                            key={skill}
-                            style={{
-                                padding: "6px",
-                                margin: "4px",
-                                border: "1px solid green",
-                                display: "inline-block"
-                            }}
-                        >
-                            {skill}
-                        </span>
-                    ))}
-
-                    <h3>Missing Skills</h3>
-                    <ul>
-                        {result.missingSkills.map((skill, i) => (
-                            <li key={i}>{skill}</li>
-                        ))}
-                    </ul>
-
-                    <h3>Suggestions</h3>
-                    <ul>
-                        {result.suggestions.map((item, i) => (
-                            <li key={i}>{item}</li>
-                        ))}
-                    </ul>
-                </>
-            )}
-
-            {
-                result && (
-
-                    <div>
-
-                        <h2 style={{ color: "green" }}>
-                            ATS Score : {result.matchScore}%
-                        </h2>
-
-                        <h3>Strengths</h3>
-
-                        {result.strengths.map(skill => (
-                            <span
-                                key={skill}
-                                style={{
-                                    padding: "6px",
-                                    margin: "4px",
-                                    border: "1px solid green",
-                                    display: "inline-block"
-                                }}
-                            >
-                                {skill}
-                            </span>
-                        ))}
-
-                        <h3>Missing Skills</h3>
-
-                        <ul>
-
-                            {result.missingSkills.map((item, index) => (
-
-                                <li key={index}>{item}</li>
-
-                            ))}
-
-                        </ul>
-
-                        <h3>Suggestions</h3>
-
-                        <ul>
-
-                            {result.suggestions.map((item, index) => (
-
-                                <li key={index}>{item}</li>
-
-                            ))}
-
-                        </ul>
-
-                    </div>
-
-                )
-            }
-
-            <button
-                onClick={() => {
-
-                    localStorage.removeItem("token");
-
-                    window.location.href = "/";
-
+            <Paper
+                elevation={3}
+                sx={{
+                    p: 2,
+                    mb: 4,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
                 }}
             >
-                Logout
-            </button>
 
-            <button onClick={() => navigate("/history")}>
-                View History
-            </button>
+                <Typography variant="h4" fontWeight="bold">
 
-        </div>
+                    Resume Analyzer
+
+                </Typography>
+
+                <Stack direction="row" spacing={2}>
+
+                    <Button
+                        variant="outlined"
+                        startIcon={<HistoryIcon />}
+                        onClick={() => navigate("/history")}
+                    >
+                        History
+                    </Button>
+
+                    <Button
+                        color="error"
+                        variant="contained"
+                        startIcon={<LogoutIcon />}
+                        onClick={() => {
+
+                            localStorage.removeItem("token");
+
+                            window.location.href = "/";
+
+                        }}
+                    >
+                        Logout
+                    </Button>
+
+                </Stack>
+
+            </Paper>
+            <Typography variant="h5" sx={{ mb: 3 }}>
+                Welcome 👋 {localStorage.getItem("email")?.split("@")[0]}
+            </Typography>
+            <Grid container spacing={3}>
+
+                {/* Upload */}
+
+                <Grid item xs={12} md={6}>
+
+                    <Card>
+
+                        <CardContent>
+
+                            <Typography variant="h6">
+
+                                Upload Resume
+
+                            </Typography>
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <input
+                                type="file"
+                                onChange={(e) => setFile(e.target.files[0])}
+                            />
+
+                            <br /><br />
+
+                            <Button
+                                variant="contained"
+                                startIcon={<CloudUploadIcon />}
+                                onClick={handleUpload}
+                            >
+
+                                Upload Resume
+
+                            </Button>
+
+                            {uploadedResume && (
+
+                                <Typography
+                                    sx={{ mt: 2 }}
+                                    color="success.main"
+                                >
+
+                                    ✅ {uploadedResume}
+
+                                </Typography>
+
+                            )}
+
+                        </CardContent>
+
+                    </Card>
+
+                </Grid>
+
+                {/* Job Description */}
+
+                <Grid item xs={12} md={6}>
+
+                    <Card>
+
+                        <CardContent>
+
+                            <Typography variant="h6">
+
+                                Job Description
+
+                            </Typography>
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <TextField
+                                fullWidth
+                                multiline
+                                rows={8}
+                                value={jobDescription}
+                                onChange={(e) => setJobDescription(e.target.value)}
+                            />
+
+                            <Button
+                                sx={{ mt: 2 }}
+                                fullWidth
+                                variant="contained"
+                                startIcon={<AutoAwesomeIcon />}
+                                onClick={handleAnalyze}
+                            >
+
+                                Analyze Resume
+
+                            </Button>
+
+                        </CardContent>
+
+                    </Card>
+
+                </Grid>
+
+                {/* Result */}
+
+                {result && (
+
+                    <Grid item xs={12}>
+
+                        <Card>
+
+                            <CardContent>
+
+                                <Typography variant="h5">
+
+                                    ATS Score
+
+                                </Typography>
+
+                                <Typography
+                                    variant="h2"
+                                    color={
+                                        result.matchScore >= 80
+                                            ? "success.main"
+                                            : result.matchScore >= 60
+                                                ? "warning.main"
+                                                : "error.main"
+                                    }
+                                >
+
+                                    {result.matchScore}%
+
+                                </Typography>
+
+                                <LinearProgress
+                                    variant="determinate"
+                                    value={result.matchScore}
+                                    color={
+                                        result.matchScore >= 80
+                                            ? "success"
+                                            : result.matchScore >= 60
+                                                ? "warning"
+                                                : "error"
+                                    }
+                                />
+
+                                <Grid container spacing={3} sx={{ mt: 2 }}>
+
+                                    <Grid item xs={12} md={4}>
+
+                                        <Typography variant="h6">
+
+                                            Strengths
+
+                                        </Typography>
+
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            flexWrap="wrap"
+                                        >
+
+                                            {result.strengths.map(skill => (
+
+                                                <Chip
+                                                    key={skill}
+                                                    label={skill}
+                                                    color="success"
+                                                    sx={{ mb: 1 }}
+                                                />
+
+                                            ))}
+
+                                        </Stack>
+
+                                    </Grid>
+
+                                    <Grid item xs={12} md={4}>
+
+                                        <Typography variant="h6">
+
+                                            Missing Skills
+
+                                        </Typography>
+
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            flexWrap="wrap"
+                                        >
+
+                                            {result.missingSkills.map(skill => (
+
+                                                <Chip
+                                                    key={skill}
+                                                    label={skill}
+                                                    color="error"
+                                                    sx={{ mb: 1 }}
+                                                />
+
+                                            ))}
+
+                                        </Stack>
+
+                                    </Grid>
+
+                                    <Grid item xs={12} md={4}>
+
+                                        <Typography variant="h6">
+
+                                            Suggestions
+
+                                        </Typography>
+
+                                        <ul>
+
+                                            {result.suggestions.map((item, i) => (
+
+                                                <li key={i}>{item}</li>
+
+                                            ))}
+
+                                        </ul>
+
+                                    </Grid>
+
+                                </Grid>
+
+                            </CardContent>
+
+                        </Card>
+
+                    </Grid>
+
+                )}
+
+            </Grid>
+
+        </Container>
 
     );
 
