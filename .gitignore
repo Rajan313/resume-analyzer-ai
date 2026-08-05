@@ -1,0 +1,21 @@
+# Backend
+resume-analyzer-backend/.gradle/
+resume-analyzer-backend/build/
+resume-analyzer-backend/uploads/
+resume-analyzer-backend/.idea/
+resume-analyzer-backend/*.iml
+resume-analyzer-backend/src/main/resources/application-local.properties
+
+# Frontend
+resume-analyzer-frontend/node_modules/
+resume-analyzer-frontend/dist/
+resume-analyzer-frontend/.vite/
+resume-analyzer-frontend/.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
